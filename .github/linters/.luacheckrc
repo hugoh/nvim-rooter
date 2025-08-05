@@ -1,0 +1,3 @@
+stds.nvim = {
+   globals = { "vim" }
+}
