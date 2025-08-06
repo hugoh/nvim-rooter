@@ -47,21 +47,31 @@ Just open a file:
 1. Opens a file in your project
 2. nvim-rooter changes directory to project root
 
-The `repo_root()` function is useful for lualine configurations, e.g.:
+The `repo_name()` function is useful for [lualine](https://github.com/nvim-lualine/lualine.nvim) configurations, e.g.:
 ```lua
-lualine_b = { require("nvim-rooter").repo_root, "branch", "diff", "diagnostics" }
+lualine_b = { require("nvim_rooter").repo_name, "branch", "diff", "diagnostics" }
 ```
 
 ## Customization
 Override any defaults in your setup:
 ```lua
-require("nvim-rooter").setup({
+require("nvim_rooter").setup({
     root_patterns = { ".git", "Makefile" },  -- Custom root markers
     excluded_filetypes = {
         ["neo-tree"] = false  -- Enable for neo-tree
     }
 })
 ```
+
+## Testing
+
+To run tests locally:
+
+```bash
+nvim --headless -u tests/minimal_init.lua -c "PlenaryBustedDirectory tests/ {}"
+```
+
+Requires [plenary.nvim](https://github.com/nvim-lua/plenary.nvim) installed in `~/.local/share/nvim/site/pack/plenary/`.
 
 ## Alternatives
 
