@@ -1,7 +1,6 @@
 describe('nvim-rooter', function()
   local rooter = require('nvim_rooter')
   local cache_key = 'nvim-rooter:repo_name'
-
   local function create_test_scenario(has_git, subdir)
     subdir = subdir or ''
     local testroot = vim.fn.tempname()
@@ -19,13 +18,19 @@ describe('nvim-rooter', function()
   end)
 
   it(('does not find anything'), function()
-    local testroot = create_test_scenario(false, '/subdir')
+    local testroot, file_path = create_test_scenario(false, '/subdir')
+    local initial_dir = vim.fn.getcwd()
+    rooter.set_root()
     assert.equals('', rooter.repo_name())
+    assert.equals(initial_dir, vim.fn.getcwd())
   end)
 
   it('finds root directory', function()
-    local testroot = create_test_scenario(true, '/subdir')
+    local testroot, file_path = create_test_scenario(true, '/subdir')
+    rooter.set_root()
     assert.equals(vim.fn.fnamemodify(testroot, ':t'), rooter.repo_name())
+    -- Normalize paths for macOS symlink handling
+    assert.equals(vim.fn.resolve(testroot), vim.fn.resolve(vim.fn.getcwd()))
   end)
 
   it('caches repo name', function()
@@ -38,11 +43,12 @@ describe('nvim-rooter', function()
   end)
 
   it('skips excluded filetypes', function()
-    rooter.setup({ excluded_filetypes = { help = true } })
-    vim.bo.filetype = 'help'
+    rooter.setup({ excluded_filetypes = { text = true } })
 
+    local initial_dir = vim.fn.getcwd()
     local testroot = create_test_scenario(true)
     assert.equals(vim.fn.fnamemodify(testroot, ':t'), rooter.repo_name())
+    assert.equals(initial_dir, vim.fn.getcwd())
   end)
 
   it('shows notification when enabled', function()
