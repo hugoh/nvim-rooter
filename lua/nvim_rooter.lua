@@ -3,6 +3,7 @@ local M = {}
 -- Default configuration
 local defaults = {
   root_patterns = { ".git", "_darcs", ".hg", ".bzr", ".svn" },
+  display_notification = true,
   excluded_filetypes = {
     ["help"] = true,
     ["nofile"] = true,
@@ -41,7 +42,14 @@ function M.setup(opts)
       local bufnr = vim.api.nvim_get_current_buf()
       local root_dir, _ = repo_info(bufnr, true)
       if root_dir then
+        local current_dir = vim.fn.fnamemodify(vim.fn.getcwd(), ":p")
+        if vim.fn.fnamemodify(root_dir, ":p") == current_dir then
+          return
+        end
         vim.api.nvim_set_current_dir(root_dir)
+        if M.config.display_notification then
+          vim.notify("[nvim-rooter] working directory = " .. root_dir, vim.log.levels.INFO)
+        end
       end
     end,
   })

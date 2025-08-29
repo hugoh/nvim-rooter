@@ -33,19 +33,20 @@ use {
 ## Default Configuration
 ```lua
 {
-    root_patterns = { ".git", "_darcs", ".hg", ".bzr", ".svn" },
-    excluded_filetypes = {
-        ["help"] = true,
-        ["nofile"] = true,
-        ["neo-tree"] = true,
-    },
+  root_patterns = { ".git", "_darcs", ".hg", ".bzr", ".svn" },
+  display_notification = true,
+  excluded_filetypes = {
+    ["help"] = true,
+    ["nofile"] = true,
+    ["neo-tree"] = true,
+  },
 }
 ```
 
 ## Usage
 Just open a file:
 1. Opens a file in your project
-2. nvim-rooter changes directory to project root
+2. nvim-rooter changes directory to project root if one is found, and displays a notification (optional)
 
 The `repo_name()` function is useful for [lualine](https://github.com/nvim-lualine/lualine.nvim) configurations, e.g.:
 ```lua
