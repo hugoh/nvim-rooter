@@ -69,10 +69,10 @@ require("nvim_rooter").setup({
 To run tests locally:
 
 ```bash
-nvim --headless -u tests/minimal_init.lua -c "PlenaryBustedDirectory tests/ {}"
+./test.sh
 ```
 
-Requires [plenary.nvim](https://github.com/nvim-lua/plenary.nvim) installed in `~/.local/share/nvim/site/pack/plenary/`.
+Requires [plenary.nvim](https://github.com/nvim-lua/plenary.nvim) installed via Lazy.
 
 ## Alternatives
 
