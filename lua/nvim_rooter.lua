@@ -28,30 +28,32 @@ local function repo_info(bufnr, cache_result)
   return root, name
 end
 
+function M.set_root()
+  local filetype = vim.bo.filetype
+  if M.config.excluded_filetypes[filetype] then
+    return
+  end
+  local bufnr = vim.api.nvim_get_current_buf()
+  local root_dir, _ = repo_info(bufnr, true)
+  if root_dir then
+    local current_dir = vim.fn.fnamemodify(vim.fn.getcwd(), ":p")
+    if vim.fn.fnamemodify(root_dir, ":p") == current_dir then
+      return
+    end
+    vim.api.nvim_set_current_dir(root_dir)
+    if M.config.display_notification then
+      vim.notify("[nvim-rooter] working directory = " .. root_dir, vim.log.levels.INFO)
+    end
+  end
+end
+
 function M.setup(opts)
   M.config = vim.tbl_deep_extend("force", defaults, opts or {})
 
   local group = vim.api.nvim_create_augroup(plugin_name, { clear = true })
   vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
     group = group,
-    callback = function()
-      local filetype = vim.bo.filetype
-      if M.config.excluded_filetypes[filetype] then
-        return
-      end
-      local bufnr = vim.api.nvim_get_current_buf()
-      local root_dir, _ = repo_info(bufnr, true)
-      if root_dir then
-        local current_dir = vim.fn.fnamemodify(vim.fn.getcwd(), ":p")
-        if vim.fn.fnamemodify(root_dir, ":p") == current_dir then
-          return
-        end
-        vim.api.nvim_set_current_dir(root_dir)
-        if M.config.display_notification then
-          vim.notify("[nvim-rooter] working directory = " .. root_dir, vim.log.levels.INFO)
-        end
-      end
-    end,
+    callback = M.set_root
   })
 end
 
