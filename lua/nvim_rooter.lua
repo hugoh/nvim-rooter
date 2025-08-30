@@ -42,7 +42,7 @@ function M.set_root()
     end
     vim.api.nvim_set_current_dir(root_dir)
     if M.config.display_notification then
-      vim.notify("[nvim-rooter] working directory = " .. root_dir, vim.log.levels.INFO)
+      vim.notify("[cwd] " .. root_dir, vim.log.levels.INFO, { title = plugin_name })
     end
   end
 end
