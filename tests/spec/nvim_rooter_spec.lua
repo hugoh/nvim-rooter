@@ -64,4 +64,67 @@ describe('nvim-rooter', function()
     local dirname = vim.fn.fnamemodify(testroot, ':t')
     assert.matches('%[cwd%] .*', vim.fn.execute('messages'))
   end)
+
+  -- Add a small helper to track DirChanged events for these tests.
+  local function track_dirchanged()
+    local pre_count, post_count = 0, 0
+    local post_cwd
+    local group = vim.api.nvim_create_augroup('nvim_rooter_test_dirchanged_' .. vim.fn.rand(), { clear = true })
+
+    vim.api.nvim_create_autocmd('DirChangedPre', {
+      group = group,
+      callback = function()
+        pre_count = pre_count + 1
+      end,
+    })
+
+    vim.api.nvim_create_autocmd('DirChanged', {
+      group = group,
+      callback = function()
+        post_count = post_count + 1
+        post_cwd = vim.v.event.cwd
+      end,
+    })
+
+    return {
+      get = function()
+        return pre_count, post_count, post_cwd
+      end,
+      clear = function()
+        pcall(vim.api.nvim_del_augroup_by_id, group)
+      end,
+    }
+  end
+
+  it('fires DirChangedPre and DirChanged when cwd changes', function()
+    rooter.setup({ display_notification = false })
+    local testroot, _ = create_test_scenario(true, '/subdir')
+
+    local tracker = track_dirchanged()
+
+    rooter.set_root()
+
+    local pre_count, post_count, post_cwd = tracker.get()
+    assert.equals(1, pre_count)
+    assert.equals(1, post_count)
+    assert.equals(vim.fn.resolve(testroot), vim.fn.resolve(post_cwd))
+
+    tracker.clear()
+  end)
+
+  it('does not fire DirChanged events when cwd is unchanged', function()
+    rooter.setup({ display_notification = false })
+    local _, _ = create_test_scenario(false, '/subdir')
+
+    local tracker = track_dirchanged()
+
+    local initial_dir = vim.fn.getcwd()
+    rooter.set_root()
+    assert.equals(initial_dir, vim.fn.getcwd())
+    local pre_count, post_count = tracker.get()
+    assert.equals(0, pre_count)
+    assert.equals(0, post_count)
+
+    tracker.clear()
+  end)
 end)
