@@ -1,6 +1,5 @@
 describe("nvim-rooter", function()
 	local rooter = require("nvim_rooter")
-	local cache_key = "nvim-rooter:repo_name"
 	local testroots = {} -- Track temp directories for cleanup
 
 	local function create_test_scenario(has_git, subdir)
@@ -13,10 +12,7 @@ describe("nvim-rooter", function()
 		return testroot, file_path
 	end
 
-	before_each(function()
-		rooter.setup({ display_notification = false })
-		vim.b[cache_key] = nil
-	end)
+	before_each(function() rooter.setup({ display_notification = false }) end)
 
 	after_each(function()
 		for _, root in ipairs(testroots) do
@@ -29,23 +25,13 @@ describe("nvim-rooter", function()
 		create_test_scenario(false, "/subdir")
 		local initial_dir = vim.fn.getcwd()
 		rooter.set_root()
-		assert.equals("", rooter.repo_name())
 		assert.equals(initial_dir, vim.fn.getcwd())
 	end)
 
 	it("finds root directory", function()
 		local testroot, _ = create_test_scenario(true, "/subdir")
 		rooter.set_root()
-		assert.equals(vim.fn.fnamemodify(testroot, ":t"), rooter.repo_name())
 		assert.equals(vim.fn.resolve(testroot), vim.fn.resolve(vim.fn.getcwd()))
-	end)
-
-	it("caches repo name", function()
-		local testroot = create_test_scenario(true)
-		rooter.repo_name()
-		local bufnr = vim.api.nvim_get_current_buf()
-		local cache = vim.api.nvim_buf_get_var(bufnr, cache_key)
-		assert.equals(vim.fn.fnamemodify(testroot, ":t"), cache)
 	end)
 
 	it("shows notification when enabled", function()
@@ -123,8 +109,6 @@ describe("nvim-rooter", function()
 		rooter.setup({ confirm = true, display_notification = false })
 		local testroot, _ = create_test_scenario(true, "/subdir")
 
-		vim.b["nvim-rooter:repo_name"] = nil
-
 		rooter.set_root()
 
 		vim.fn.confirm = original_confirm
@@ -142,7 +126,6 @@ describe("nvim-rooter", function()
 		local initial_dir = vim.fn.getcwd()
 
 		vim.api.nvim_get_current_buf()
-		vim.b["nvim-rooter:repo_name"] = nil
 
 		rooter.set_root()
 

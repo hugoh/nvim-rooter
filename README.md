@@ -4,7 +4,6 @@ A minimalist (100 LOC) Neovim plugin that changes your working directory to the 
 
 - Automatic and manual (`Rooter` command) modes
 - Option to be prompted to confirm the directory change
-- Get the repo path with `repo_name()` function
 
 ## Installation
 
@@ -50,14 +49,6 @@ Just open a file:
 2. nvim-rooter changes directory to project root if one is found, and displays a notification (optional)
 
 ## API
-
-### `require("nvim_rooter").repo_name()`
-
-The `repo_name()` function is useful for [lualine](https://github.com/nvim-lualine/lualine.nvim) configurations, e.g.:
-
-```lua
-lualine_b = { require("nvim_rooter").repo_name, "branch", "diff", "diagnostics" }
-```
 
 ### `require("nvim_rooter").set_root()`
 
