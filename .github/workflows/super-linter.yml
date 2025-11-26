@@ -5,25 +5,23 @@ on:
   push:
     branches: [main]
 
+permissions:
+  contents: read # to read your repository's code for linting
+  statuses: write # to update the status checks for the linter results
+
 jobs:
   super-linter:
     name: Lint Code Base
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: read
-      # To report GitHub Actions status checks
-      statuses: write
     steps:
       - name: Checkout Code
         uses: actions/checkout@v6
         with:
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Run Super-Linter
-        uses: super-linter/super-linter@c15ee6dd7d559940b734579617c3637b9c007f6f
+        uses: super-linter/super-linter/slim@b43ea44a67cef98163080c9c4cf82e700f77254f4cbcde3146cf6b3056eacc9d
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LINTER_RULES_PATH: .
-          VALIDATE_LUA: true
-          VALIDATE_MARKDOWN: true
