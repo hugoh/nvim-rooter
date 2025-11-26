@@ -9,12 +9,19 @@ jobs:
   super-linter:
     name: Lint Code Base
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+      # To report GitHub Actions status checks
+      statuses: write
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
 
       - name: Run Super-Linter
-        uses: github/super-linter@v5
+        uses: super-linter/super-linter@c15ee6dd7d559940b734579617c3637b9c007f6f
         env:
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
