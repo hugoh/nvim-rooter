@@ -1,6 +1,6 @@
 # nvim-rooter 🌳
 
-A minimalist (100 LOC) Neovim plugin that changes your working directory to the project root when opening files:
+A minimalist (60 LOC) Neovim plugin that changes your working directory to the project root when opening files:
 
 - Automatic and manual (`Rooter` command) modes
 - Option to be prompted to confirm the directory change
@@ -34,7 +34,6 @@ use {
 ```lua
 {
 	root_patterns = { ".git", "_darcs", ".hg", ".bzr", ".svn" },
-	scope = "nvim", -- cd scope: nvim, tab, win
 	auto = true, -- automatically change working directory
 	confirm = false, -- confirm before automatically changing directory
 	display_notification = true,
