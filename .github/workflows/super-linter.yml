@@ -23,10 +23,7 @@ jobs:
       - name: Run Super-Linter
         uses: super-linter/super-linter@c15ee6dd7d559940b734579617c3637b9c007f6f
         env:
-          DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          FILTER_REGEX_EXCLUDE: /test/
           LINTER_RULES_PATH: .
-          VALIDATE_ALL_CODEBASE: true
           VALIDATE_LUA: true
           VALIDATE_MARKDOWN: true
