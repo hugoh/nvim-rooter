@@ -100,7 +100,7 @@ describe("nvim-rooter", function()
 	it("prompts when confirm is true and changes cwd on yes", function()
 		local confirm_called = false
 		local original_confirm = vim.fn.confirm
-		local function mock_confirm(msg, opts, default)
+		local function mock_confirm()
 			confirm_called = true
 			return 1
 		end
@@ -118,7 +118,7 @@ describe("nvim-rooter", function()
 
 	it("does not change cwd when confirm is true and user declines", function()
 		local original_confirm = vim.fn.confirm
-		local function mock_confirm(sg, opts, default) return 2 end
+		local function mock_confirm() return 2 end
 		vim.fn.confirm = mock_confirm
 
 		rooter.setup({ confirm = true, display_notification = false })
