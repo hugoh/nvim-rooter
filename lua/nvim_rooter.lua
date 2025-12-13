@@ -27,7 +27,7 @@ function M.set_root(manual)
 		local ok, skip = pcall(vim.api.nvim_buf_get_var, bufnr, cd_skip_key)
 		local previously_skipped = ok and skip
 		if previously_skipped then return end
-		local confirm = vim.fn.confirm(string.format('Change to project root?\n"%s"', root_dir), "&Yes\n&No", 2)
+		local confirm = vim.fn.confirm(string.format('Change to project root?\n"%s"', root_dir), "&Yes\n&No", 1)
 		if confirm == 2 then
 			vim.api.nvim_buf_set_var(bufnr, cd_skip_key, true)
 			return
