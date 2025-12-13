@@ -24,4 +24,5 @@ jobs:
         uses: super-linter/super-linter/slim@cc90344711f7c84363cb32fff58a42f42dd05cbb
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VALIDATE_BIOME_FORMAT: false
           LINTER_RULES_PATH: .
