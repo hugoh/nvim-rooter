@@ -25,7 +25,7 @@ function M.is_cwd_root()
 	return buf_root and buf_root == vim.uv.cwd() or false, buf_root
 end
 
-local function confirm_set_root()
+local function confirm_set_root(root_dir)
 	local ok, skip = pcall(vim.api.nvim_buf_get_var, 0, cd_skip_key)
 	local previously_skipped = ok and skip
 	if previously_skipped then return false end
@@ -44,7 +44,7 @@ function M.set_root(manual)
 	local is_root_dir, root_dir = M.is_cwd_root()
 	if is_root_dir or not root_dir then return end
 	if not manual and M.config.confirm then
-		if not confirm_set_root() then return end
+		if not confirm_set_root(root_dir) then return end
 	end
 	vim.api.nvim_set_current_dir(root_dir)
 	if M.config.display_notification then
