@@ -34,7 +34,7 @@ use {
 ```lua
 {
 	root_patterns = { ".git", "_darcs", ".hg", ".bzr", ".svn" },
-	auto = true, -- automatically change working directory
+	auto = true, -- automatically change working directory on buffer change
 	confirm = false, -- confirm before automatically changing directory
 	display_notification = true,
 }
@@ -49,17 +49,39 @@ Just open a file:
 
 ## API
 
-### `require("nvim_rooter").set_root()`
+### `require("nvim_rooter").get_root()`
 
-If `auto` is set to false, you can set the directory with `:Rooter` or:
+Returns the root directory of the project for the current buffer, or `nil` if no root is found:
 
 ```lua
-require("nvim_rooter").set_root()
+local root = require("nvim_rooter").get_root()
+if root then
+  print("Project root: " .. root)
+end
 ```
 
-### `require("nvim_rooter").is_setting_root()`
+### `require("nvim_rooter").is_cwd_root()`
 
-If you need to do some scripting based on directory changes (e.g., `DirChanged` event), `is_setting_root()` indicates if the directory change was triggered by `nvim-rooter`.
+Checks if the current working directory is already the project root. Returns a boolean and the root directory:
+
+```lua
+local is_root, root = require("nvim_rooter").is_cwd_root()
+if is_root then
+  print("Already at project root: " .. root)
+end
+```
+
+### `require("nvim_rooter").set_root(manual)`
+
+Changes the working directory to the project root. The `manual` parameter (default: `false`) indicates if the change was manually triggered:
+
+- When `manual` is `true`, directory changes are not subject to the `confirm` setting
+- When `manual` is `false` and `confirm` is enabled, the user will be prompted before changing
+
+```lua
+require("nvim_rooter").set_root()  -- Auto mode
+require("nvim_rooter").set_root(true)  -- Manual mode (via :Rooter command)
+```
 
 ## Customization
 
