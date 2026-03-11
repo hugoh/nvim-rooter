@@ -1,0 +1,12 @@
+{
+  "extends": ["config:best-practices", ":automergeAll", ":automergeBranch"],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": ["^\\.github/workflows/.*\\.ya?ml$"],
+      "matchStrings": [
+        "version: (?<currentValue>v?\\d+\\.\\d+\\.\\d+)\\s+# renovate: datasource=(?<datasource>[^\\s]+) depName=(?<depName>[^\\s]+)"
+      ]
+    }
+  ]
+}
