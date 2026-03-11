@@ -57,9 +57,10 @@ end
 function M.setup(opts)
 	M.config = vim.tbl_deep_extend("force", defaults, opts or {})
 
+	local group = vim.api.nvim_create_augroup(plugin_name, { clear = true })
 	if M.config.auto then
 		vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
-			group = vim.api.nvim_create_augroup(plugin_name, { clear = true }),
+			group = group,
 			callback = function() return M.set_root(false) end,
 			nested = true,
 		})
