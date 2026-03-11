@@ -15,7 +15,6 @@ local function is_normal_buffer(bufnr) return vim.api.nvim_buf_get_option(bufnr,
 -- Return the root directory corresponding to the current buffer, or nil
 function M.get_root()
 	local bufnr = vim.api.nvim_get_current_buf()
-	if not is_normal_buffer(bufnr) then return end
 	return vim.fs.root(bufnr, M.config.root_patterns)
 end
 
@@ -43,8 +42,10 @@ end
 function M.set_root(manual)
 	local is_root_dir, root_dir = M.is_cwd_root()
 	if is_root_dir or not root_dir then return end
-	if not manual and M.config.confirm then
-		if not confirm_set_root(root_dir) then return end
+	if not manual then
+		local bufnr = vim.api.nvim_get_current_buf()
+		if not is_normal_buffer(bufnr) then return end
+		if M.config.confirm and not confirm_set_root(root_dir) then return end
 	end
 	vim.api.nvim_set_current_dir(root_dir)
 	if M.config.display_notification then
@@ -56,9 +57,10 @@ end
 function M.setup(opts)
 	M.config = vim.tbl_deep_extend("force", defaults, opts or {})
 
+	local group = vim.api.nvim_create_augroup(plugin_name, { clear = true })
 	if M.config.auto then
 		vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
-			group = vim.api.nvim_create_augroup(plugin_name, { clear = true }),
+			group = group,
 			callback = function() return M.set_root(false) end,
 			nested = true,
 		})
