@@ -1,7 +1,9 @@
 describe("nvim-rooter", function()
 	local rooter = require("nvim_rooter")
 	local testroots = {} -- Track temp directories for cleanup
-	local initial_cwd = vim.fn.getcwd()
+	local initial_cwd = vim.fn.resolve(vim.fn.tempname())
+	vim.fn.mkdir(initial_cwd, "p")
+	vim.api.nvim_set_current_dir(initial_cwd)
 
 	local function create_test_scenario(has_git, subdir)
 		subdir = subdir or ""
@@ -15,7 +17,10 @@ describe("nvim-rooter", function()
 	end
 
 	before_each(function()
-		rooter.setup({ auto = false, display_notification = false })
+		rooter.setup({
+			auto = false,
+			display_notification = false,
+		})
 		vim.api.nvim_set_current_dir(initial_cwd)
 	end)
 
@@ -133,7 +138,7 @@ describe("nvim-rooter", function()
 
 	it("is_cwd_root returns false when cwd is not root", function()
 		rooter.setup({ auto = false, display_notification = false })
-		local testroot, _ = create_test_scenario(true, "/subdir")
+		create_test_scenario(true, "/subdir")
 		local is_root, root = rooter.is_cwd_root()
 		assert.is_false(is_root)
 		assert.is_not_nil(root)
