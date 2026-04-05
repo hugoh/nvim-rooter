@@ -21,7 +21,7 @@ jobs:
           persist-credentials: false
 
       - name: Run Super-Linter
-        uses: super-linter/super-linter/slim@06b4165382979c5349513a150db3cf6d46108b14
+        uses: super-linter/super-linter/slim@487d0d80e66b54831132fe7b2095f9388a624462
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VALIDATE_BIOME_FORMAT: false
