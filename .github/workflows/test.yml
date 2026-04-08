@@ -16,7 +16,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Install Neovim
-        uses: rhysd/action-setup-vim@19e3dd31a84dbc2c5445d65e9b363f616cab96c1
+        uses: rhysd/action-setup-vim@74c12daa1c51341c18a1132132daa63ea447bf3d
         with:
           neovim: true
           version: v0.12.1 # renovate: datasource=github-releases depName=neovim/neovim
