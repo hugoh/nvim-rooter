@@ -19,7 +19,7 @@ jobs:
         uses: rhysd/action-setup-vim@19e3dd31a84dbc2c5445d65e9b363f616cab96c1
         with:
           neovim: true
-          version: v0.12.1 # renovate: datasource=github-releases depName=neovim/neovim
+          version: v0.12.2 # renovate: datasource=github-releases depName=neovim/neovim
       - name: Setup Plenary
         run: |
           mkdir -p ~/.local/share/nvim/lazy
